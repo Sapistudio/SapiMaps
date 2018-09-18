@@ -1,0 +1,15 @@
+{
+	"name": "sapistudio/googlemaps",
+	"description": "Collection of Google Maps API Web Services ",
+	"homepage": "https://alexpechkarev.github.io/google-maps/",
+	"license": "MIT",
+	"minimum-stability": "stable",
+	"require": {
+		"illuminate/support": "5.*"
+	},        
+	"autoload": {
+		"psr-4": {
+			"SapiStudio\GoogleMaps\\": "src/"
+		}
+	}
+}
