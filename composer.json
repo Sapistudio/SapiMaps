@@ -9,7 +9,7 @@
 	},        
 	"autoload": {
 		"psr-4": {
-			"SapiStudio\SapiMaps\\": "src/"
+			"SapiStudio\\SapiMaps\\": "src/"
 		}
 	}
 }
