@@ -159,11 +159,11 @@ class Handler
     }
 
     /**
-     * Handler::get()
+     * Handler::query()
      * 
      * @return
      */
-    public function get()
+    public function query()
     {
         return $this->makeRequest();
     }
