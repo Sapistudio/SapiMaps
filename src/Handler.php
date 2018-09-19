@@ -11,17 +11,18 @@ class Handler
     protected $key;
     protected $requestUrl;
     protected $verifySSL;
-    private $configData = [];
-    private $serviceData = [];
+    private $configData     = [];
+    private $serviceData    = [];
+    protected $responseBody = [];
     protected static $responseKey = 'responseDefaultKey';
     
      /**  No errors occurred, the address was successfully */
     const STATUS_SUCCESS = "OK";
     
+  
     /**
      * Handler::load()
      * 
-     * @param mixed $service
      * @return
      */
     public static function load($service = null)
@@ -32,7 +33,6 @@ class Handler
     /**
      * Handler::__construct()
      * 
-     * @param mixed $service
      * @return
      */
     public function __construct($service = null)
@@ -44,8 +44,6 @@ class Handler
     /**
      * Handler::getConfig()
      * 
-     * @param mixed $key
-     * @param string $default
      * @return
      */
     public function getConfig($key, $default = '')
@@ -54,10 +52,26 @@ class Handler
     }
 
     /**
+     * Handler::getBody()
+     * 
+     * @return
+     */
+    public function getBody(){
+        return $this->responseBody;
+    }
+    
+    /**
+     * Handler::getKey()
+     * 
+     * @return
+     */
+    public function getKey(){
+        return $this->key;
+    }
+  
+    /**
      * Handler::setConfig()
      * 
-     * @param mixed $key
-     * @param mixed $value
      * @return
      */
     public function setConfig($key, $value)
@@ -72,8 +86,6 @@ class Handler
     /**
      * Handler::getService()
      * 
-     * @param mixed $key
-     * @param string $default
      * @return
      */
     public function getService($key, $default = '')
@@ -97,41 +109,19 @@ class Handler
     }
 
     /**
-     * Handler::setParamByKey()
-     * 
-     * @param mixed $key
-     * @param mixed $value
-     * @return
-     */
-    public function setParamByKey($key, $value)
-    {
-        if (Arr::has($this->serviceData, 'param.' . $key))
-            Arr::set($this->serviceData, 'param.' . $key, $value);
-        return $this;
-    }
-
-    /**
      * Handler::setParam()
      * 
-     * @param mixed $param
      * @return
      */
-    public function setParam($param = [])
+    public function setParam($key = null, $value = null)
     {
-        Arr::set($this->serviceData, 'param', array_merge($this->getService('param'), $param));
+        if(is_array($key))
+            Arr::set($this->serviceData, 'param', array_merge($this->getService('param'),$key));
+        else{
+            if (Arr::has($this->serviceData, 'param.' . $key))
+                Arr::set($this->serviceData, 'param.' . $key, $value);
+        }
         return $this;
-    }
-
-    /**
-     * Handler::getParamByKey()
-     * 
-     * @param mixed $key
-     * @return
-     */
-    public function getParamByKey($key)
-    {
-        if (Arr::has($this->serviceData, 'param.' . $key))
-            return $this->getService('param.' . $key);
     }
 
     /**
@@ -139,15 +129,16 @@ class Handler
      * 
      * @return
      */
-    public function getParam()
+    public function getParam($key = null)
     {
-        return $this->getService('param');
+        if(is_null($key))
+            return $this->getService('param');
+        return (Arr::has($this->serviceData,'param.'.$key)) ? $this->getService('param.' . $key) : null;
     }
 
     /**
      * Handler::setEndpoint()
      * 
-     * @param string $key
      * @return
      */
     public function setEndpoint($key = 'json')
@@ -170,12 +161,11 @@ class Handler
     /**
      * Handler::get()
      * 
-     * @param bool $needle
      * @return
      */
     public function get()
     {
-        return $this->getResponse();
+        return $this->makeRequest();
     }
 
     /**
@@ -208,15 +198,16 @@ class Handler
     }
 
     /**
-     * Handler::getResponse()
+     * Handler::makeRequest()
      * 
+     * @return
      */
-    protected function getResponse()
+    protected function makeRequest()
     {
         $requestType = trim(strtolower($this->getService('type')));
         if($this->getService('endpoint'))
             $this->requestUrl->appendPathSegment($this->getEndpoint());
-        if($requestType != 'post')
+        if($requestType != 'post' && $this->getParam())
             $this->requestUrl->setQueryFromArray($this->getParam());
         $this->requestUrl->setQueryParameter('key',$this->key);
         switch ($requestType){
@@ -239,8 +230,8 @@ class Handler
                 throw new \ErrorException($responseStatus.' '.$request->getReasonPhrase().':'.$responseBody['error_message']);
         }
         $checkClass = __NAMESPACE__."\Services\\".ucfirst($this->service);
-        $data       = (Arr::has($responseBody,$this->getService(self::$responseKey))) ?Arr::get($responseBody,$this->getService(self::$responseKey)) : $responseBody;
-        return (class_exists($checkClass)) ? new $checkClass($data) : $responseBody;
+        $this->responseBody = (Arr::has($responseBody,$this->getService(self::$responseKey))) ? Arr::get($responseBody,$this->getService(self::$responseKey)) : $responseBody;
+        return (class_exists($checkClass)) ? new $checkClass($this) : $responseBody;
     }
     
     /**

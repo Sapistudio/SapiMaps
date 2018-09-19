@@ -2,10 +2,13 @@
 namespace SapiStudio\SapiMaps;
 
 use Illuminate\Support\Arr;
+use SapiStudio\SapiMaps\Handler as MapObject;
+use SapiStudio\Http\Url as UrlHandler;
 
 abstract class Service
 {
     protected $responseData;
+    protected $handler = null;
     
     /**
      * Service::__construct()
@@ -13,9 +16,10 @@ abstract class Service
      * @param mixed $response
      * @return
      */
-    public function __construct($response = [])
+    public function __construct(MapObject $response)
     {
-        $this->responseData = $this->formatResponse($response);
+        $this->handler      = $response;
+        $this->responseData = $this->formatResponse($response->getBody());
     }
     
     /**
