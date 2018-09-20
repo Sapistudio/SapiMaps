@@ -8,7 +8,7 @@ class Handler
 {
     protected $endpoint;
     protected $service;
-    protected $key;
+    protected $apiKey = null;
     protected $requestUrl;
     protected $verifySSL;
     private $configData     = [];
@@ -61,12 +61,22 @@ class Handler
     }
     
     /**
-     * Handler::getKey()
+     * Handler::getApiKey()
      * 
      * @return
      */
-    public function getKey(){
-        return $this->key;
+    public function getApiKey(){
+        return $this->apiKey;
+    }
+    
+    /**
+     * Handler::setApiKey()
+     * 
+     * @return
+     */
+    public function setApiKey($key = null){
+        $this->apiKey = $key;
+        return $this;
     }
   
     /**
@@ -190,7 +200,8 @@ class Handler
         // set default endpoint
         $this->setEndpoint();
         // is service key set, use it, otherwise use default key
-        $this->key = (!$this->getService('key')) ? $this->getConfig('key') : $this->getService('key');
+        if(is_null($this->getApiKey()))
+            $this->apiKey = (!$this->getService('key')) ? $this->getConfig('key') : $this->getService('key');
         // set service url
         $this->requestUrl = UrlHandler::parse($this->getService('url'));
         // is ssl_verify_peer key set, use it, otherwise use default key
@@ -209,7 +220,7 @@ class Handler
             $this->requestUrl->appendPathSegment($this->getEndpoint());
         if($requestType != 'post' && $this->getParam())
             $this->requestUrl->setQueryFromArray($this->getParam());
-        $this->requestUrl->setQueryParameter('key',$this->key);
+        $this->requestUrl->setQueryParameter('key',$this->getApiKey());
         switch ($requestType){
             case 'POST':
                 $postData = json_encode($this->getParam());

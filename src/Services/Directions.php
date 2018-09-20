@@ -89,7 +89,7 @@ class Directions extends MapsService
         $waypoints_label_iter = 0;
         $markers[] = "markers=color:green" . urlencode("|") . "label:" . urlencode($waypoints_labels[$waypoints_label_iter++] . '|' . $this->getStartLocation());
         $markers[] = "markers=color:red" . urlencode("|") . "label:" . urlencode($waypoints_labels[$waypoints_label_iter] . '|' . $this->getEndLocation());
-        return 'https://maps.googleapis.com/maps/api/staticmap?size='.$size.'&maptype=roadmap&path=enc:'.$this->getOverview().'&'.implode($markers, '&').'&key='.$this->handler->getKey();
+        return 'https://maps.googleapis.com/maps/api/staticmap?size='.$size.'&maptype=roadmap&path=enc:'.$this->getOverview().'&'.implode($markers, '&').'&key='.$this->handler->getApiKey();
     }
     
     /**
