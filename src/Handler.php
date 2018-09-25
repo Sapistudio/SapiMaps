@@ -19,7 +19,6 @@ class Handler
      /**  No errors occurred, the address was successfully */
     const STATUS_SUCCESS = "OK";
     
-  
     /**
      * Handler::load()
      * 
