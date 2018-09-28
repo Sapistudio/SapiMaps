@@ -1,7 +1,7 @@
 <?php namespace SapiStudio\SapiMaps;
 
 use Illuminate\Support\Arr;
-use SapiStudio\Http\Browser\CurlClient;
+use SapiStudio\Http\Browser\StreamClient;
 use SapiStudio\Http\Url as UrlHandler;
 
 class Handler
@@ -228,7 +228,7 @@ class Handler
             default:
                 break;
         }
-        $request        = CurlClient::make()->{$requestType}($this->requestUrl->write());
+        $request        = StreamClient::make()->{$requestType}($this->requestUrl->write());
         $responseBody   = $this->unserializeResponse($request->getBody()->getContents());
         $responseStatus = $request->getStatusCode();
         switch($responseStatus){
