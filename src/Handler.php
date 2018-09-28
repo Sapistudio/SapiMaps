@@ -229,7 +229,7 @@ class Handler
                 break;
         }
         $request        = StreamClient::make()->{$requestType}($this->requestUrl->write());
-        $responseBody   = $this->unserializeResponse($request->getBody()->getContents());
+        $responseBody   = $this->unserializeResponse($request->getBody());
         $responseStatus = $request->getStatusCode();
         switch($responseStatus){
             case 200:
