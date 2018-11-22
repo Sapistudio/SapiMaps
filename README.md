@@ -10,10 +10,8 @@ composer require sapistudio/sapimaps
 Usage
 ------------
 
-Here is an example of making request directions:
+Here is an example of making request search:
 ```php
 use Sapistudio\SapiMaps\Handler;
-
-$response = Handler::load('directions')->setApiKey('your_key')->setParam(['origin'=>'start','destination'=>'end'])->query();
-
+$response = Handler::load('nearbysearch')->setConfig("key","your_key")->setParam->(['location'=>latlng,'type'=>'gas_station'])->get());
 ```
