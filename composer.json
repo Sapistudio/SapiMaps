@@ -1,0 +1,15 @@
+{
+	"name": "sapistudio/sapimaps",
+	"description": "maps api providers",
+	"license": "MIT",
+	"minimum-stability": "stable",
+	"require": {
+		"illuminate/support": "5.*",
+		"sapistudio/restapi": "^2.0",
+	},        
+	"autoload": {
+		"psr-4": {
+			"SapiStudio\\SapiMaps\\": "src/"
+		}
+	}
+}
