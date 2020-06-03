@@ -23,6 +23,11 @@ class Address extends \SapiStudio\SapiMaps\Service
         return $this->get('address.label');
     }
     
+    /**  Address::getCoodinates() */
+    public function getCoodinates(){
+        return $this->get('position');
+    }
+    
     /** Address::getAddresTitle()*/
     public function getAddresTitle(){
         return $this->get('title');
